@@ -3,8 +3,8 @@
 import { currentUser } from "@clerk/nextjs";
 import { StreamClient } from "@stream-io/node-sdk";
 
-const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
-const apiSecret = process.env.STREAM_API_SECRET!;
+const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY;
+const apiSecret = process.env.STREAM_SECRET_KEY;
 
 export const tokenProvider = async (userId: string) => {
   const user = await currentUser();
@@ -15,7 +15,7 @@ export const tokenProvider = async (userId: string) => {
 
   if (!apiSecret) throw new Error("Stream API secret is required");
 
-  const client = new StreamClient(apiKey, apiSecret);
+  const client = new StreamClient(apiKey,apiSecret);
 
   const exp = Math.round(new Date().getTime() / 1000) + 60 * 60;
 
