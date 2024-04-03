@@ -7,9 +7,10 @@ import { create } from "domain";
 import { useUser } from "@clerk/nextjs";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { Call } from "@stream-io/node-sdk";
-import { toast } from "./ui/use-toast";
+import { useToast } from "./ui/use-toast";
 
 const MeetingTypeList = () => {
+  const {toast} = useToast();
   const [MeetingState, setMeetingState] = useState<
     "isScheduleMeeting" | "isJoiningMeeting" | "isInstantMeeting" | undefined
   >();
