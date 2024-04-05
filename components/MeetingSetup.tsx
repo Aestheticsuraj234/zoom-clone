@@ -1,17 +1,27 @@
 "use client";
-import { useCall, VideoPreview } from '@stream-io/video-react-sdk'
-import React, { useEffect, useState } from 'react'
+import {
+  DeviceSettings,
+  useCall,
+  VideoPreview,
+} from "@stream-io/video-react-sdk";
+import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
-const MeetingSetup = () => {// https://getstream.io/video/docs/react/ui-cookbook/replacing-call-controls/
+const MeetingSetup = ({
+  setIsSetupComplete,
+}: {
+  setIsSetupComplete: (value:boolean) => void;
+}) => {
+  // https://getstream.io/video/docs/react/ui-cookbook/replacing-call-controls/
   const [isMicCamToggled, setIsMicCamToggled] = useState(false);
   const call = useCall();
 
   if (!call) {
     throw new Error(
-      'useStreamCall must be used within a StreamCall component.',
+      "useStreamCall must be used within a StreamCall component."
     );
   }
- useEffect(() => {
+  useEffect(() => {
     if (isMicCamToggled) {
       call.camera.disable();
       call.microphone.disable();
@@ -22,12 +32,31 @@ const MeetingSetup = () => {// https://getstream.io/video/docs/react/ui-cookbook
   }, [isMicCamToggled, call?.camera, call?.microphone]);
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-3 text-white">
-      <h1 className="text-2xl font-bold ">
-        SetUp
-      </h1>
+      <h1 className="text-2xl font-bold ">SetUp</h1>
       <VideoPreview />
-    </div>
-  )
-}
+      <div className="h-16 flex  items-center justify-center gap-2 font-medium ">
+        <label className="flex items-center justify-center gap-2 font-medium">
+          <input
+            type="checkbox"
+            checked={isMicCamToggled}
+            onChange={(e) => setIsMicCamToggled(e.target.checked)}
+          />
+          Join with mic and camera off
+        </label>
+        <DeviceSettings />
+      </div>
+      <Button
+        className="rounded-md bg-green-500 px-4 py-2.5"
+        onClick={() => {
+          call.join();
 
-export default MeetingSetup
+          setIsSetupComplete(true);
+        }}
+      >
+        Join Meeting
+      </Button>
+    </div>
+  );
+};
+
+export default MeetingSetup;
